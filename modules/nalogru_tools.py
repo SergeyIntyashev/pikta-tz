@@ -12,7 +12,8 @@ class NalogRuTools:
             response = requests.post(
                 self.__HOST, {'c': 'getOktmmf', 'ifns': ifns, 'okatom': ''})
             response_body = response.json()
-            self.__check_response_body_for_error(response_body)
+            if self.__check_response_body_for_error(response_body):
+                return
             print('Выберите код муниципального образования, если это необходимо, из предложенных ниже \n',
                   json.dumps(response_body['oktmmfList'], indent=4, ensure_ascii=False))
             self.__get_ifns_details(ifns, input())
@@ -30,14 +31,21 @@ class NalogRuTools:
 
         response = requests.post(self.__HOST, data)
         response_body = response.json()
-        self.__check_response_body_for_error(response_body)
+        if self.__check_response_body_for_error(response_body):
+            return
         print('Результат вашего запроса \n', json.dumps(
             response_body, indent=4, ensure_ascii=False))
 
     def __check_response_body_for_error(self, response_body):
-        if 'ERRORS' in response_body:
+        result = None
+
+        if 'ERRORS' in response_body.keys():
             print('Произошла ошибки при получении данных: ',
                   response_body['ERRORS'])
-        elif 'ERROR' in response_body:
+            result = True
+        elif 'ERROR' in response_body.keys():
             print('Произошла ошибки при получении данных: ',
                   response_body['ERROR'])
+            result = True
+
+        return result

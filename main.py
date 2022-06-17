@@ -1,9 +1,14 @@
 from modules.nalogru_tools import NalogRuTools
 from modules.sql_tools import SQLTools
+from modules.parsing_json_tools import ParsingJsonTools
+from modules.excel_tools import ExcelTools
 
 
 def execute_task1():
-    pass
+    parsing_json_tools = ParsingJsonTools()
+    parsed_data = parsing_json_tools.get_data()
+
+    ExcelTools.save_parsed_data(parsed_data, 'parsed_test.xlsx')
 
 
 def execute_task2():
@@ -58,7 +63,7 @@ if __name__ == '__main__':
 
         match command:
             case '1':
-                pass
+                execute_task1()
             case '2':
                 execute_task2()
             case '3':

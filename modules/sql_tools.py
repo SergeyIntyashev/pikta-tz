@@ -1,12 +1,10 @@
-import re
 import sqlite3
 import os
 
 
 class SQLTools:
 
-    __init_script_path = "{0}{1}".format(
-        os.getcwd(), '/scripts/init_db.sql')
+    __init_script_path = os.path.join(os.getcwd(), 'scripts/init_db.sql')
 
     def __init__(self):
         self.__conn = None
@@ -37,7 +35,7 @@ class SQLTools:
                 'Произошла ошибка при подключении или инициализации базы данных по причине:{}'.format(error))
 
     def customer_purchases(self):
-        if self.check_init_db():
+        if self.__check_init_db():
             return
 
         query = '''
@@ -54,10 +52,10 @@ class SQLTools:
                     c.client_name
                 '''
         print('Список клиентов с общей суммой их покупок:')
-        self.execute_query(query, self.__customer_purchases_columns)
+        self.__execute_query(query, self.__customer_purchases_columns)
 
     def customer_bought_phone(self):
-        if self.check_init_db():
+        if self.__check_init_db():
             return
 
         query = '''
@@ -74,10 +72,10 @@ class SQLTools:
                     c.client_name
                 '''
         print('Список клиентов, которые купили телефон:')
-        self.execute_query(query, self.__customer_bought_phone_сolumns)
+        self.__execute_query(query, self.__customer_bought_phone_сolumns)
 
     def products_orders(self):
-        if self.check_init_db():
+        if self.__check_init_db():
             return
 
         query = '''
@@ -93,9 +91,9 @@ class SQLTools:
                     cnt DESC
                 '''
         print('Список товаров с количество их заказа:')
-        self.execute_query(query, self.__products_orders_columns)
+        self.__execute_query(query, self.__products_orders_columns)
 
-    def execute_query(self, query, columns):
+    def __execute_query(self, query, columns):
         try:
             with self.__conn:
                 result = self.__conn.execute(query)
@@ -106,7 +104,7 @@ class SQLTools:
         except sqlite3.IntegrityError as e:
             print('Произошла ошибка при выполнении: ', e)
 
-    def check_init_db(self):
+    def __check_init_db(self):
         if not self.__conn:
             print('Перед выполнением действия необходимо инициализировать базу данных, запустив команду 1 - Создание базы данных')
             return True
